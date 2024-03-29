@@ -31,3 +31,8 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
+UCI HAR Dataset
+.DS_Store
+UCI HAR Dataset.zip
+summary.csv
+README.html
