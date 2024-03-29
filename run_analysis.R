@@ -15,29 +15,29 @@ load_set <- function(type) {
   activity_labels <- read.table(p(getwd(), "/UCI HAR Dataset/activity_labels.txt"), 
                                 header = FALSE,
                                 sep = " ",
-                                col.names = c("LabelId", "Label"))
+                                col.names = c("label_id", "label"))
   
   features_labels <- read.table(p(getwd(), "/UCI HAR Dataset/features.txt"), 
                                 header = FALSE,
                                 sep = " ",
-                                col.names = c("Column", "Name"))
+                                col.names = c("column", "name"))
   
-  features_column_names <- features_labels$Name
+  features_column_names <- features_labels$name
   
   subjects <- read.table(p(getwd(), "/UCI HAR Dataset/", type, "/subject_", type ,".txt"), 
                          header = FALSE,
                          sep = " ",
-                         col.names = c("Subject"))
+                         col.names = c("subject"))
   
   labels <- read.table(p(getwd(), "/UCI HAR Dataset/", type, "/y_", type, ".txt"), 
                        header = FALSE,
                        sep = " ",
-                       col.names = c("LabelId"))
-  labels['Label'] <- ''
+                       col.names = c("label_id"))
+  labels['label'] <- ''
   
-  labels <- rows_update(labels, activity_labels, by = "LabelId")
+  labels <- rows_update(labels, activity_labels, by = "label_id")
   
-  labels <- select(labels, -c(LabelId))
+  labels <- select(labels, -c(label_id))
   
   features <- read.fwf(p(getwd(), "/UCI HAR Dataset/", type, "/X_", type, ".txt"), 
                        header = FALSE,
@@ -45,7 +45,8 @@ load_set <- function(type) {
                        sep = "", 
                        fill = FALSE,
                        strip.white = TRUE,
-                       col.names = features_column_names)
+                       col.names = features_column_names,
+                       check.names = FALSE)
   
   features <- features[ , grepl("mean|std", colnames(features), ignore.case = TRUE)]
   
@@ -62,7 +63,7 @@ train <- load_set("train")
 full <- bind_rows(test, train)
 
 summary <- full %>%
-  group_by(Subject, Label) %>%
+  group_by(subject, label) %>%
   summarise_at(vars(-group_cols()), mean)
 
 write.csv(summary, file = p(getwd(), "/summary.csv"), row.names = FALSE)
