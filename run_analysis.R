@@ -66,4 +66,5 @@ summary <- full %>%
   group_by(subject, label) %>%
   summarise_at(vars(-group_cols()), mean)
 
+write.table(summary, file = p(getwd(), "/summary.txt"), row.names = FALSE)
 write.csv(summary, file = p(getwd(), "/summary.csv"), row.names = FALSE)
